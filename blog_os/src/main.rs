@@ -1,6 +1,7 @@
 #![no_std] // Rust の標準ライブラリにリンクしない
 #![no_main] // 全ての Rust レベルのエントリポイントを無効にする
 
+mod vga_buffer;
 use core::panic::PanicInfo;
 
 /// この関数はパニック時に呼ばれる
@@ -8,7 +9,6 @@ use core::panic::PanicInfo;
 fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
-
 
 static HELLO: &[u8] = b"Hello World!";
 
@@ -22,6 +22,8 @@ pub extern "C" fn _start() -> ! {
             *vga_buffer.offset(i as isize * 2 + 1) = 0xb;
         }
     }
+
+    vga_buffer::print_something();
 
     loop {}
 }
