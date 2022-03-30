@@ -4,29 +4,27 @@
 #![test_runner(blog_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use blog_os::println;
 use core::panic::PanicInfo;
 
-#[no_mangle]
+#[no_mangle] // この関数の名前を変えない
 pub extern "C" fn _start() -> ! {
-    println!("Hello World{}", "!");
-
-    #[cfg(test)]
     test_main();
 
     loop {}
 }
 
-/// この関数はパニック時に呼ばれる。
-#[cfg(not(test))]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
-    loop {}
+fn test_runner(tests: &[&dyn Fn()]) {
+    unimplemented!();
 }
 
-#[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     blog_os::test_panic_handler(info)
+}
+
+use blog_os::println;
+
+#[test_case]
+fn test_println() {
+    println!("test_println output");
 }
